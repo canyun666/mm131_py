@@ -1,11 +1,13 @@
-import requests
 import re
 import os
+from urllib import request
 
 def geturl_text(url):
     #这个网站是gbk的
-    gethtml=requests.get(url)
-    return str(gethtml.content,"gbk")
+    url=url.replace('https','http')
+    url=url.replace('m.mm131','www.mm131')
+    gethtml=request.urlopen(url)
+    return gethtml.read().decode('gbk')
 def getstr_mid(s,left,right):
     #取出左右str中间的字符串
     return s[s.find(left)+len(left):s.find(right)]
@@ -13,7 +15,7 @@ headers={"Referer":"https://www.mm131.net/xinggan/"}#用于请求的消息头，
 #======================================================
 #图片官网：https://www.mm131.net/
 url=input("请输入地址：")#第一张图片的地址
-#url="http://www.mm131.net/xinggan/5734_2.html"
+#url="http://www.mm131.net/xinggan/5734.html"
 text=geturl_text(url)
 page=re.search('<span class="page-ch">共.*页</span>',text).group(0)
 page=getstr_mid(page,"共","页")
@@ -34,8 +36,10 @@ for i in range(1,int(page)+1):
     print(pic_url)
 
     with open("./"+title+"/"+str(i)+".jpg","wb") as f:
-        f.write(requests.get(pic_url,headers=headers).content)
+        pic=request.Request(pic_url)
+        pic.add_header("Referer","https://www.mm131.net/xinggan/")
+        f.write(request.urlopen(pic).read())
         print("success!")
     next_url=re.search('<div class="content-pic"><a href=".*\.html">',text).group(0)
     next_url=next_url[next_url.rfind('href="')+6:-2] #取出下一页地址，如 4647_2.html
-    url=url.replace(url[url.rfind("/")+1:],next_url) #倒找/xxx.html，替换为下一页的地址
+    url=url.replace(url[url.rfind("/")+1:],next_url) #倒找/xxx.html
