@@ -11,7 +11,6 @@ def geturl_text(url):
 def getstr_mid(s,left,right):
     #取出左右str中间的字符串
     return s[s.find(left)+len(left):s.find(right)]
-headers={"Referer":"https://www.mm131.net/xinggan/"}#用于请求的消息头，不然会失败
 #======================================================
 #图片官网：https://www.mm131.net/
 url=input("请输入地址：")#第一张图片的地址
@@ -37,7 +36,7 @@ for i in range(1,int(page)+1):
 
     with open("./"+title+"/"+str(i)+".jpg","wb") as f:
         pic=request.Request(pic_url)
-        pic.add_header("Referer","https://www.mm131.net/xinggan/")
+        pic.add_header("Referer","https://www.mm131.net/xinggan/")#用于请求的消息头，不然会失败
         f.write(request.urlopen(pic).read())
         print("success!")
     next_url=re.search('<div class="content-pic"><a href=".*\.html">',text).group(0)
