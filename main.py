@@ -36,7 +36,7 @@ for i in range(1,int(page)+1):
 
     with open("./"+title+"/"+str(i)+".jpg","wb") as f:
         pic=request.Request(pic_url)
-        pic.add_header("Referer","https://www.mm131.net/xinggan/")#用于请求的消息头，不然会失败
+        pic.add_header("Referer","https://www.mmm131.com/xinggan/")#用于请求的消息头，不然会失败
         f.write(request.urlopen(pic).read())
         print("success!")
     next_url=re.search('<div class="content-pic"><a href=".*\.html">',text).group(0)
